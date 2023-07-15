@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aunthenticate Everything</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        background-color: bisque;
+        color: darkblue;
+      }
+      body * {
+        text-align: center;
+        margin: 20px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="authForm">
+      <h2>Sign Up or Sign in</h2>
+      <input id="userEmail" type="email" placeholder="email" />
+      <input id="userPassword" type="password" placeholder="password" /><br />
+      <button id="signUpButton">Sign Up</button>
+      <button id="signInButton">Sign in</button>
+    </div>
+    <div id="secretContent">
+      <h3>
+        This is top secrete, you can only access if you are a member of this
+        organization.
+      </h3>
+      <button id="signOutButton">Sign Out</button>
+    </div>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDNr0MthUbyR817eKzPFdj80BxQjPzCFRw",
+        authDomain: "authfun-71e81.firebaseapp.com",
+        projectId: "authfun-71e81",
+        storageBucket: "authfun-71e81.appspot.com",
+        messagingSenderId: "926598103795",
+        appId: "1:926598103795:web:e7758eb5964e3c01432d86",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      const userEmail = document.querySelector("#userEmail");
+      const userPassword = document.querySelector("#userPassword");
+
+      const authForm = document.querySelector("#authForm");
+      const secretContent = document.querySelector("#secretContent");
+
+      const signUpButton = document.querySelector("#signUpButton");
+      const signInButton = document.querySelector("#signInButton");
+      const signOutButton = document.querySelector("#signOutButton");
+
+      secretContent.style.display = "none";
+
+      const userSignUp = async () => {
+        const signUpEmail = userEmail.value;
+        const signUpPassword = userPassword.value;
+        createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+            alert("your account has been created");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode + errorMessage);
+            alert(errorMessage);
+          });
+      };
+
+      const userSignIn = async () => {
+        const signInEmail = userEmail.value;
+        const signInPassword = userPassword.value;
+        signInWithEmailAndPassword(auth, signInEmail, signInPassword)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            alert("you are now logged in");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode + errorMessage);
+            alert(errorMessage);
+          });
+      };
+
+      signUpButton.addEventListener("click", () => {
+        if (userEmail.value && userPassword.value) {
+          userSignUp();
+        } else {
+          alert("input signup details");
+        }
+      });
+
+      signInButton.addEventListener("click", () => {
+        if (userEmail.value && userPassword.value) {
+          userSignIn();
+        } else {
+          alert("input signup details");
+        }
+      });
+    </script>
+  </body>
+</html>
